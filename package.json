@@ -1,0 +1,17 @@
+{
+  "name": "automaticalImageGetter",
+  "version": "0.0.1",
+  "description": "Automatical image getter on Mac",
+  "main": "ana-tes1.js",
+  "dependencies": {
+    "URIjs": "^1.14.1",
+    "minimist": "^1.1.0",
+    "request": "^2.48.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hiroki Takagishi",
+  "license": "ISC"
+}
