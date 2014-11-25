@@ -1,8 +1,8 @@
 {
   "name": "automaticalImageGetter",
-  "version": "0.0.1",
-  "description": "Automatical image getter on Mac",
-  "main": "ana-tes1.js",
+  "version": "0.0.2",
+  "description": "Automatical GoogleImageSearch getter",
+  "main": "main.js",
   "dependencies": {
     "URIjs": "^1.14.1",
     "minimist": "^1.1.0"
