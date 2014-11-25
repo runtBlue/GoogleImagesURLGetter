@@ -5,8 +5,7 @@
   "main": "ana-tes1.js",
   "dependencies": {
     "URIjs": "^1.14.1",
-    "minimist": "^1.1.0",
-    "request": "^2.48.0"
+    "minimist": "^1.1.0"
   },
   "devDependencies": {},
   "scripts": {
