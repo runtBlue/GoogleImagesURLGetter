@@ -1,40 +1,92 @@
 ############################
 # Input
 ############################
-
 mmmst = require 'minimist'
+
 argv = mmmst process.argv.slice(2)
-# console.log argv
 if not argv.q or not argv.n
 	console.log "please -q and -n options"
 	return
+
 queryWord = argv.q
 if isNaN(argv.n) is true
-	console.log "please -q input number"
-searchNumber = argv.n
-if 100 < searchNumber
-	console.log "oh big number"
-searchNumber = Math.ceil searchNumber
+	console.log "please -q input int number 1-100"
+	return
+
+searchNumber = Math.ceil argv.n
+if 100 < searchNumber or searchNumber < 1
+	console.log "oh error number"
+	return
+
 ############################
 # Accesser
 ############################
-
 URI = require 'URIjs'
+http = require "http"
+util = require "util"
+apiBaseURI = 'http://ajax.googleapis.com/ajax/services/search/images'
+separator = argv.s or '\n'
+downloadUrls = []
 
-for i in [1..searchNumber]
-	url = new URI 'http://ajax.googleapis.com/ajax/services/search/images'
+apiAccess = (i = 1) ->
+	url = new URI apiBaseURI
 	url.addSearch
 		q: queryWord
 		v: "1.0"
 		hl: "ja"
 		safe: "off"
 		start: i
-	request = require "request"
-	request url.toString(), (err, res, body) ->
-		if not err or res.statusCode is 200
-			data = JSON.parse(body)
-			for result in data.responseData.results
-				console.log result.unescapedUrl
-		else
-			console.log "error: " + res.statusCode
+	http
+		.get url.toString(), (res) ->
+			body = ''
+			res.setEncoding 'utf8'
+			res.on 'data', (chunk) ->
+				body += chunk
+			res.on 'end', (res) ->
+				ret = JSON.parse body
+				for result in ret.responseData.results
+					if result.unescapedUrl
+						util.print  result.unescapedUrl + separator
+						downloadUrls.push result.unescapedUrl
+				if i is searchNumber
+					downloading()
+				else apiAccess(i + 1)
+		.on 'error', (err) ->
+			console.log err. messege
 			return
+
+############################
+# Download
+############################
+downloading = () ->
+	if not argv.d then return
+	fs = require "fs"
+	intToArrangedString = (i) ->
+		if i >= 100 then return "" + i
+		if 100 > i >= 10 then return "0" + i
+		if 10 > i then return  "00" + i
+	imgDownload = (i) ->
+		i = i or 0
+		if not downloadUrls[i]
+			return console.log "done."
+		urlString = downloadUrls[i]
+		req = http.get urlString, (res) ->
+			url = new URI urlString
+			savePath = queryWord + intToArrangedString(i) + "." + url.suffix()
+			console.log savePath
+			outFile = fs.createWriteStream savePath
+			res.pipe outFile
+			res.on 'end', () ->
+				outFile.close()
+				i += 1
+				imgDownload i
+		req.on 'error', (err) ->
+			console.dir err
+	imgDownload()
+
+
+############################
+# Fire
+############################
+
+apiAccess()
