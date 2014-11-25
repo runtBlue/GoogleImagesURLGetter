@@ -28,14 +28,14 @@ apiBaseURI = 'http://ajax.googleapis.com/ajax/services/search/images'
 separator = argv.s or '\n'
 downloadUrls = []
 
-apiAccess = (i = 1) ->
+apiAccess = (i = 0) ->
 	url = new URI apiBaseURI
 	url.addSearch
 		q: queryWord
 		v: "1.0"
 		hl: "ja"
 		safe: "off"
-		start: i
+		start: i * 4
 	http
 		.get url.toString(), (res) ->
 			body = ''
@@ -58,9 +58,9 @@ apiAccess = (i = 1) ->
 ############################
 # Download
 ############################
+fs = require "fs"
 downloading = () ->
 	if not argv.d then return
-	fs = require "fs"
 	intToArrangedString = (i) ->
 		if i >= 100 then return "" + i
 		if 100 > i >= 10 then return "0" + i
