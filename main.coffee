@@ -59,6 +59,7 @@ apiAccess = (i = 0) ->
 # Download
 ############################
 fs = require "fs"
+https = require "https"
 downloading = () ->
 	if not argv.d then return
 	intToArrangedString = (i) ->
@@ -70,8 +71,12 @@ downloading = () ->
 		if not downloadUrls[i]
 			return console.log "done."
 		urlString = downloadUrls[i]
-		req = http.get urlString, (res) ->
-			url = new URI urlString
+		url = new URI urlString
+		if url.protocol() is "https"
+			httpAccess = https
+		else
+			httpAccess = http
+		req = httpAccess.get urlString, (res) ->
 			savePath = queryWord + intToArrangedString(i) + "." + url.suffix()
 			console.log savePath
 			outFile = fs.createWriteStream savePath
