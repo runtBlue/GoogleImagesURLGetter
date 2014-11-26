@@ -36,6 +36,7 @@ apiAccess = (i = 0) ->
 		hl: "ja"
 		safe: "off"
 		start: i * 4
+	# console.log url.toString()
 	http
 		.get url.toString(), (res) ->
 			body = ''
@@ -45,7 +46,7 @@ apiAccess = (i = 0) ->
 			res.on 'end', (res) ->
 				ret = JSON.parse body
 				for result in ret.responseData.results
-					if result.unescapedUrl
+					if result.unescapedUrl and downloadUrls.indexOf(result.unescapedUrl) is -1
 						util.print  result.unescapedUrl + separator
 						downloadUrls.push result.unescapedUrl
 				if i is searchNumber

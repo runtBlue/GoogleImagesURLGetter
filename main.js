@@ -63,7 +63,7 @@
         _ref = ret.responseData.results;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           result = _ref[_i];
-          if (result.unescapedUrl) {
+          if (result.unescapedUrl && downloadUrls.indexOf(result.unescapedUrl) === -1) {
             util.print(result.unescapedUrl + separator);
             downloadUrls.push(result.unescapedUrl);
           }
