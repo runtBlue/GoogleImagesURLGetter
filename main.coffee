@@ -45,10 +45,11 @@ apiAccess = (i = 0) ->
 				body += chunk
 			res.on 'end', (res) ->
 				ret = JSON.parse body
-				for result in ret.responseData.results
-					if result.unescapedUrl and downloadUrls.indexOf(result.unescapedUrl) is -1
-						util.print  result.unescapedUrl + separator
-						downloadUrls.push result.unescapedUrl
+				if ret.responseData
+					for result in ret.responseData.results
+						if result.unescapedUrl and downloadUrls.indexOf(result.unescapedUrl) is -1
+							util.print  result.unescapedUrl + separator
+							downloadUrls.push result.unescapedUrl
 				if i is searchNumber
 					downloading()
 				else apiAccess(i + 1)
